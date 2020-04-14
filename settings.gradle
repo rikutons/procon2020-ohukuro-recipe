@@ -1,0 +1,2 @@
+rootProject.name='Ohukuro Recipe'
+include ':app'

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Ohukuro Recipe</string>
+    <string name="title">おふくろのレシピ</string>
+    <string name="start_message">画面のどこかをタップしてね！</string>
+    <string name="setting">設定</string>
+    <string name="make_recipe">レシピを作る</string>
+    <string name="watch_recipe">レシピを見る</string>
+</resources>
