@@ -26,6 +26,7 @@ android {
 
 }
 
+def grpc_version = "1.28.1"
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -50,17 +51,25 @@ protobuf {
         artifact = "com.google.protobuf:protoc:3.1.0"
     }
     plugins {
-        javalite {
+        /*javalite {
             artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0"
-        }
+        }*/
         grpc {
             artifact = "io.grpc:protoc-gen-grpc-java:$grpc_version"
         }
+        kroto {
+            artifact = "com.github.marcoferrer.krotoplus:protoc-gen-kroto-plus:$krotoPlusVersion"
+        }
     }
     generateProtoTasks {
+        def krotoConfig = file("krotoPlusConfig.asciipb")
         all().each { task ->
             task.plugins {
-                javalite {}
+                task.inputs.files krotoConfig
+                kroto {
+                    outputSubDir = "java"
+                    option "ConfigPath=$krotoConfig"
+                }
                 grpc {
                     option 'lite'
                 }
