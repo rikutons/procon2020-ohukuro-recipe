@@ -19,7 +19,7 @@ package google.longrunning;
 import "google/api/annotations.proto";
 import "google/api/client.proto";
 import "google/protobuf/any.proto";
-import "google/protobuf/duration.proto";
+// import "google/protobuf/duration.proto";
 import "google/protobuf/empty.proto";
 import "google/rpc/status.proto";
 import "google/protobuf/descriptor.proto";
@@ -211,7 +211,7 @@ message WaitOperationRequest {
   // The maximum duration to wait before timing out. If left blank, the wait
   // will be at most the time permitted by the underlying HTTP/RPC protocol.
   // If RPC context deadline is also specified, the shorter one will be used.
-  google.protobuf.Duration timeout = 2;
+  // google.protobuf.Duration timeout = 2;
 }
 
 // A message representing the message types used by a long-running operation.

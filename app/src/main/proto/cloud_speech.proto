@@ -22,7 +22,7 @@ import "google/api/client.proto";
 import "google/api/field_behavior.proto";
 import "google/longrunning/operations.proto";
 import "google/protobuf/any.proto";
-import "google/protobuf/duration.proto";
+// import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 import "google/rpc/status.proto";
 
@@ -680,7 +680,7 @@ message StreamingRecognitionResult {
 
   // Time offset of the end of this result relative to the
   // beginning of the audio.
-  google.protobuf.Duration result_end_time = 4;
+  // google.protobuf.Duration result_end_time = 4;
 
   // For multi-channel audio, this is the channel number corresponding to the
   // recognized result for the audio from that channel.
@@ -736,7 +736,7 @@ message WordInfo {
   // in the top hypothesis.
   // This is an experimental feature and the accuracy of the time offset can
   // vary.
-  google.protobuf.Duration start_time = 1;
+  // google.protobuf.Duration start_time = 1;
 
   // Time offset relative to the beginning of the audio,
   // and corresponding to the end of the spoken word.
@@ -744,7 +744,7 @@ message WordInfo {
   // in the top hypothesis.
   // This is an experimental feature and the accuracy of the time offset can
   // vary.
-  google.protobuf.Duration end_time = 2;
+  // google.protobuf.Duration end_time = 2;
 
   // The word corresponding to this set of information.
   string word = 3;
