@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.google.protobuf'
 
 android {
     compileSdkVersion 29
@@ -26,7 +25,6 @@ android {
 
 }
 
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -36,35 +34,4 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
-    implementation "io.grpc:grpc-auth:$grpc_version"
-    implementation "io.grpc:grpc-okhttp:$grpc_version"
-    implementation "io.grpc:grpc-protobuf-lite:$grpc_version"
-    implementation "io.grpc:grpc-stub:$grpc_version"
-    implementation "javax.annotation:javax.annotation-api:1.2"
-    implementation "com.google.auth:google-auth-library-oauth2-http:0.9.0"
-}
-
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.1.0"
-    }
-    plugins {
-        javalite {
-            artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0"
-        }
-        grpc {
-            artifact = "io.grpc:protoc-gen-grpc-java:$grpc_version"
-        }
-    }
-    generateProtoTasks {
-        all().each { task ->
-            task.plugins {
-                javalite {}
-                grpc {
-                    option 'lite'
-                }
-            }
-        }
-    }
 }
