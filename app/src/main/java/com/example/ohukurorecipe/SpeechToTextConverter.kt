@@ -13,6 +13,17 @@ import io.grpc.stub.StreamObserver
 
 
 class SpeechToTextConverter(private val context: Context) {
+
+    interface Listener {
+        /**
+         * Called when a new piece of text was recognized by the Speech API.
+         *
+         * @param text    The text.
+         * @param isFinal `true` when the API finished processing audio.
+         */
+        fun onSpeechRecognized(text: String?, isFinal: Boolean)
+    }
+
     private lateinit var speechStub : SpeechGrpc.SpeechStub
     private lateinit var observer: StreamObserver<StreamingRecognizeRequest>
     fun connectToServer() : Unit {
@@ -48,10 +59,10 @@ class SpeechToTextConverter(private val context: Context) {
                 .build()
         )
     }
-    fun convert(fragment: ByteString): Unit {
+    fun convert(fragment: ByteArray, size: Int): Unit {
         observer.onNext(
             StreamingRecognizeRequest.newBuilder()
-                .setAudioContent(fragment)
+                .setAudioContent(ByteString.copyFrom(fragment, 0, size))
                 .build()
         )
     }
