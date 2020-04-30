@@ -27,7 +27,7 @@ class MakeRecipeActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if(requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
-            val videoUri: Uri? = intent.data
+            val videoUri: Uri? = data?.data
             videoView.setVideoURI(videoUri)
             videoView.start()
         }
