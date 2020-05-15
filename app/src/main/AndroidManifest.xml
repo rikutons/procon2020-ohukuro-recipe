@@ -5,6 +5,7 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -13,8 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MakeRecipeActivity"/>
-        <activity android:name=".SelectActivity" >
+        <activity android:name=".TestActivity"></activity>
+        <activity android:name=".MakeRecipeActivity" />
+        <activity android:name=".SelectActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".TitleActivity" />
@@ -31,6 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".SpeechService"/>
     </application>
 
 </manifest>

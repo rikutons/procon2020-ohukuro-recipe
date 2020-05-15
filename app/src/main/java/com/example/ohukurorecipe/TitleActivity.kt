@@ -19,6 +19,10 @@ class TitleActivity : AppCompatActivity() {
             val intent = Intent(this, SettingActivity::class.java)
             startActivity(intent)
         }
+        testButton.setOnClickListener {
+            val intent = Intent(this, TestActivity::class.java)
+            startActivity(intent)
+        }
         titleBackground.setOnClickListener {
             val intent = Intent(this, SelectActivity::class.java)
             startActivity(intent)

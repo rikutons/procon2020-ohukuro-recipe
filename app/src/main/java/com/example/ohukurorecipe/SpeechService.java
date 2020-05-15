@@ -85,6 +85,8 @@ public class SpeechService extends Service {
          */
         void onSpeechRecognized(String text, boolean isFinal);
 
+        void onAPIReadied();
+
     }
 
     private static final String TAG = "SpeechService";
@@ -302,8 +304,10 @@ public class SpeechService extends Service {
                     RecognizeRequest.newBuilder()
                             .setConfig(RecognitionConfig.newBuilder()
                                     .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
-                                    .setLanguageCode("en-US")
-                                    .setSampleRateHertz(16000)
+                                    .setLanguageCode("ja")
+                                    .setSampleRateHertz(48000)
+                                    .setAudioChannelCount(2)
+                                    .setEnableSeparateRecognitionPerChannel(true)
                                     .build())
                             .setAudio(RecognitionAudio.newBuilder()
                                     .setContent(ByteString.readFrom(stream))
@@ -316,11 +320,9 @@ public class SpeechService extends Service {
     }
 
     private class SpeechBinder extends Binder {
-
         SpeechService getService() {
             return SpeechService.this;
         }
-
     }
 
     private final Runnable mFetchAccessTokenRunnable = new Runnable() {
@@ -386,6 +388,9 @@ public class SpeechService extends Service {
                         Math.max(accessToken.getExpirationTime().getTime()
                                 - System.currentTimeMillis()
                                 - ACCESS_TOKEN_FETCH_MARGIN, ACCESS_TOKEN_EXPIRATION_TOLERANCE));
+            }
+            for (Listener listener : mListeners) {
+                listener.onAPIReadied();
             }
         }
     }

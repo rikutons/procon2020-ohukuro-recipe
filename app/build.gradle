@@ -20,6 +20,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -89,6 +90,8 @@ dependencies {
     def appcompat_version = "1.1.0"
 
     implementation "androidx.appcompat:appcompat:$appcompat_version"
+
+    implementation 'com.android.support:multidex:1.0.3'
 }
 
 task copySecretKey(type: Copy) {
@@ -99,4 +102,3 @@ task copySecretKey(type: Copy) {
     rename secretKey.getName(), "credential.json"
 }
 preBuild.dependsOn(copySecretKey)
-
