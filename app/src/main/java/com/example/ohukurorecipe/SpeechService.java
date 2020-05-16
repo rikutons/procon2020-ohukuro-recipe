@@ -298,15 +298,15 @@ public class SpeechService extends Service {
      *
      * @param stream The audio data.
      */
-    public void recognizeInputStream(InputStream stream) {
+    public void recognizeInputStream(InputStream stream, int sampleRateHertz) {
         try {
             mApi.recognize(
                     RecognizeRequest.newBuilder()
                             .setConfig(RecognitionConfig.newBuilder()
                                     .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
                                     .setLanguageCode("ja")
-                                    .setSampleRateHertz(48000)
-                                    .setAudioChannelCount(2)
+                                    .setSampleRateHertz(sampleRateHertz)
+                                    .setAudioChannelCount(1)
                                     .setEnableSeparateRecognitionPerChannel(true)
                                     .build())
                             .setAudio(RecognitionAudio.newBuilder()
@@ -318,7 +318,7 @@ public class SpeechService extends Service {
             Log.e(TAG, "Error loading the input", e);
         }
     }
-
+    
     private class SpeechBinder extends Binder {
         SpeechService getService() {
             return SpeechService.this;
