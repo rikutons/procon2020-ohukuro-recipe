@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.ohukurorecipe"
-        minSdkVersion 14
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -92,6 +92,9 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompat_version"
 
     implementation 'com.android.support:multidex:1.0.3'
+
+    // FFmpeg
+    implementation 'com.arthenica:mobile-ffmpeg-full:4.3.2'
 }
 
 task copySecretKey(type: Copy) {

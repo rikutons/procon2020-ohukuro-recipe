@@ -5,7 +5,10 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import kotlinx.android.synthetic.main.activity_make_recipe.*
+import java.io.File
+import com.arthenica.mobileffmpeg.FFprobe
 
 const val REQUEST_VIDEO_CAPTURE = 1
 class MakeRecipeActivity : AppCompatActivity() {
@@ -28,8 +31,11 @@ class MakeRecipeActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
-            val videoUri: Uri? = data?.data
+        if(requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK && data != null) {
+            val videoUri : Uri = data.data ?: return
+            val filePath = PathUtil.getPath(this, videoUri)
+            Log.d("user", filePath)
+            FFprobe.execute("-i $filePath")
             videoView.setVideoURI(videoUri)
             videoView.start()
         }
