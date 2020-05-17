@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.arthenica.mobileffmpeg.Config.*
 import com.arthenica.mobileffmpeg.FFmpeg
+import com.arthenica.mobileffmpeg.FFprobe
 import kotlinx.android.synthetic.main.activity_test.*
 import java.io.File
 import java.io.FileInputStream
@@ -19,7 +20,6 @@ import java.nio.channels.Channels
 
 class TestActivity : AppCompatActivity() {
     private var mSpeechService: SpeechService? = null
-    private val SAMPLING_LATE = 48000
 
     private val mServiceConnection: ServiceConnection = object :
         ServiceConnection {
@@ -64,13 +64,13 @@ class TestActivity : AppCompatActivity() {
         super.onStart()
 
         // Prepare Cloud Speech API
-        val ret = bindService(Intent(this, SpeechService::class.java), mServiceConnection, BIND_AUTO_CREATE)
+        bindService(Intent(this, SpeechService::class.java), mServiceConnection, BIND_AUTO_CREATE)
         Log.d("user", "onStart()")
     }
 
     private fun sendWavData(){
         val inputStream = resources.openRawResource(R.raw.naidesu)
-        mSpeechService?.recognizeInputStream(inputStream, 48000)
+        mSpeechService?.recognizeInputStream(inputStream, 48000, 2)
     }
 
     private fun sendMp4Data(){
@@ -83,10 +83,70 @@ class TestActivity : AppCompatActivity() {
         Log.d("user", "-i ${videoFile.path} ${audioFile.path}")
 
         FFmpeg.execute("-i ${videoFile.path} ${audioFile.path}")
-        val audioInputStream = FileInputStream(audioFile)
-        mSpeechService?.recognizeInputStream(audioInputStream, 16000)
+
         videoFile.delete()
+
+        val minuteCount = getFileDurationMinutes(audioFile.path)
+        val hertz = getFileAudioHertz(audioFile.path)
+        val channelCount = getFileChannelCount(audioFile.path)
+        Log.d("user", "$minuteCount $hertz $channelCount")
+
+        for(i in 0..minuteCount) {
+            val fragmentFile = File(cacheDir, "fragment.wav")
+            if(i == minuteCount) {
+                Log.d("user", "-ss " +  (i * 60).toString() + " -i ${audioFile.path} -c copy ${fragmentFile.path}")
+                FFmpeg.execute("-ss " +  (i * 60).toString() + " -i ${audioFile.path} -c copy ${fragmentFile.path}")
+            }
+            else {
+                Log.d("user", "-ss " + (i * 60).toString() + " -i ${audioFile.path} -t 60 -c copy ${fragmentFile.path}")
+                FFmpeg.execute("-ss " + (i * 60).toString() + " -i ${audioFile.path} -t 60 -c copy ${fragmentFile.path}")
+            }
+            val fragmentInputStream = FileInputStream(fragmentFile)
+            mSpeechService?.recognizeInputStream(fragmentInputStream, hertz, channelCount)
+            fragmentFile.delete()
+        }
         audioFile.delete()
     }
 
+    private fun getFileDurationMinutes(path : String) : Int{
+        FFprobe.execute(path)
+        val output = getLastCommandOutput()
+        Log.d("user", output)
+        var result = 0
+        if (Regex("Duration: ").containsMatchIn(output)) {
+            val strings = output.split("Duration: ")
+            Log.d("user", strings.toString())
+            Log.d("user", strings[1].substring(3, 5))
+            result = Integer.parseInt(strings[1].substring(3, 5))
+        }
+        return result
+    }
+
+    private fun getFileAudioHertz(path : String) : Int{
+        FFprobe.execute(path)
+        val output = getLastCommandOutput()
+        Log.d("user", output)
+        var result = 0
+        if (Regex(" Hz,").containsMatchIn(output)) {
+            val strings = output.split(" Hz,")
+            Log.d("user", strings.toString())
+            Log.d("user", strings[0].substring(strings[0].length - 5))
+            result = Integer.parseInt(strings[0].substring(strings[0].length - 5))
+        }
+        return result
+    }
+
+    private fun getFileChannelCount(path : String) : Int{
+        FFprobe.execute(path)
+        val output = getLastCommandOutput()
+        Log.d("user", output)
+        var result = 0
+        if (Regex(" channel").containsMatchIn(output)) {
+            val strings = output.split(" channel")
+            Log.d("user", strings.toString())
+            Log.d("user", strings[0].substring(strings[0].length - 1))
+            result = Integer.parseInt(strings[0].substring(strings[0].length - 1))
+        }
+        return result
+    }
 }

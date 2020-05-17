@@ -298,7 +298,7 @@ public class SpeechService extends Service {
      *
      * @param stream The audio data.
      */
-    public void recognizeInputStream(InputStream stream, int sampleRateHertz) {
+    public void recognizeInputStream(InputStream stream, int sampleRateHertz, int channelCount) {
         try {
             mApi.recognize(
                     RecognizeRequest.newBuilder()
@@ -306,7 +306,7 @@ public class SpeechService extends Service {
                                     .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
                                     .setLanguageCode("ja")
                                     .setSampleRateHertz(sampleRateHertz)
-                                    .setAudioChannelCount(1)
+                                    .setAudioChannelCount(channelCount)
                                     .setEnableSeparateRecognitionPerChannel(true)
                                     .build())
                             .setAudio(RecognitionAudio.newBuilder()
